@@ -78,3 +78,11 @@ nav {
   flex-direction: column;
   gap: 5px;
 }
+
+.offer-form p {
+  margin: 0;
+}
+
+.form-field input {
+  width: 300px;
+}

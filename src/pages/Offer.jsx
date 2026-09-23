@@ -19,8 +19,12 @@ function Offer() {
         <input value={skill} onChange={(e) => setSkill(e.target.value)} />
       </div>
       <p>You are offering: {skill}</p>
-      <label>What would you like to learn?</label>
-      <input value={wantedSkill} onChange={(e) => setWantedSkill(e.target.value)} />
+      <div className="form-field">
+        <label>What would you like to learn?</label>
+        <input
+          value={wantedSkill}
+          onChange={(e) => setWantedSkill(e.target.value)} />
+      </div>
       <p>I want to learn: {wantedSkill}</p>
 
       <button type="submit" className="primary">
