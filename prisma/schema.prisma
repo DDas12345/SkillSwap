@@ -1,0 +1,100 @@
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum SkillType {
+  TEACHING
+  LEARNING
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  fullName     String
+  email        String   @unique
+  passwordHash String
+  course       String?
+  yearOfStudy  String?
+  bio          String?
+
+  skills          UserSkill[]
+  sentRequests    ExchangeRequest[] @relation("SentRequests")
+  receivedRequests ExchangeRequest[] @relation("ReceivedRequests")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  skills    Skill[]
+  createdAt DateTime @default(now())
+}
+
+model Skill {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  users        UserSkill[]
+  requestedIn  ExchangeRequest[] @relation("RequestedSkill")
+  offeredIn    ExchangeRequest[] @relation("OfferedSkill")
+
+  createdAt DateTime @default(now())
+
+  @@unique([name, categoryId])
+  @@index([categoryId])
+}
+
+model UserSkill {
+  id      Int       @id @default(autoincrement())
+  userId  Int
+  skillId Int
+  type    SkillType
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, skillId, type])
+  @@index([skillId, type])
+}
+
+model ExchangeRequest {
+  id               Int           @id @default(autoincrement())
+  senderId         Int
+  receiverId       Int
+  requestedSkillId Int
+  offeredSkillId   Int?
+  message          String?
+  status           RequestStatus @default(PENDING)
+
+  sender User @relation("SentRequests", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("ReceivedRequests", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  requestedSkill Skill  @relation("RequestedSkill", fields: [requestedSkillId], references: [id], onDelete: Restrict)
+  offeredSkill   Skill? @relation("OfferedSkill", fields: [offeredSkillId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([senderId])
+  @@index([receiverId, status])
+}

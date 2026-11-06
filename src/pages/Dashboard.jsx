@@ -1,12 +1,30 @@
-import { Link } from 'react-router-dom'
+
+import { Link, useNavigate } from 'react-router-dom'
 import '../App.css'
 
 function Dashboard() {
+    const navigate = useNavigate()
+
+    // Get the logged-in user's information
+    const user = JSON.parse(localStorage.getItem('user') || '{}')
+
+    // Logout function
+    const handleLogout = () => {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('user')
+
+        navigate('/login', { replace: true })
+    }
+
+    const userName = user.fullName || 'Student'
+    const userInitial = userName.charAt(0).toUpperCase()
+
     return (
         <div className="dashboard-page">
 
             {/* Sidebar */}
             <aside className="dashboard-sidebar">
+
                 <div className="dashboard-brand">
                     <span className="brand-symbol">S</span>
                     <span>
@@ -15,6 +33,7 @@ function Dashboard() {
                 </div>
 
                 <nav className="dashboard-nav">
+
                     <Link to="/dashboard" className="active">
                         🏠 Dashboard
                     </Link>
@@ -34,25 +53,50 @@ function Dashboard() {
                     <Link to="/profile">
                         👤 My Profile
                     </Link>
+
                 </nav>
 
                 <div className="sidebar-bottom">
-                    <Link to="/">↩ Back to Home</Link>
-                    <Link to="/login">Log Out</Link>
+
+                    <Link to="/">
+                        ↩ Back to Home
+                    </Link>
+
+                    <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="dashboard-logout"
+                    >
+                        ↪ Log Out
+                    </button>
+
                 </div>
+
             </aside>
 
             {/* Main Content */}
             <main className="dashboard-main">
 
                 <header className="dashboard-header">
+
                     <div>
-                        <p className="dashboard-eyebrow">YOUR LEARNING SPACE</p>
-                        <h1>Welcome back, Student! 👋</h1>
-                        <p>Ready to learn something new today?</p>
+                        <p className="dashboard-eyebrow">
+                            YOUR LEARNING SPACE
+                        </p>
+
+                        <h1>
+                            Welcome back, {userName}! 👋
+                        </h1>
+
+                        <p>
+                            Ready to learn something new today?
+                        </p>
                     </div>
 
-                    <div className="dashboard-avatar">S</div>
+                    <div className="dashboard-avatar">
+                        {userInitial}
+                    </div>
+
                 </header>
 
                 {/* Statistics */}
@@ -86,50 +130,86 @@ function Dashboard() {
 
                 {/* Skills Section */}
                 <section className="dashboard-section">
+
                     <div className="dashboard-section-heading">
+
                         <div>
-                            <p className="dashboard-eyebrow">YOUR KNOWLEDGE</p>
+                            <p className="dashboard-eyebrow">
+                                YOUR KNOWLEDGE
+                            </p>
+
                             <h2>My Skills</h2>
                         </div>
 
-                        <Link to="/my-skills">Manage Skills ↗</Link>
+                        <Link to="/my-skills">
+                            Manage Skills ↗
+                        </Link>
+
                     </div>
 
                     <div className="empty-state">
+
                         <span>🌌</span>
-                        <h3>Your learning universe starts here.</h3>
+
+                        <h3>
+                            Your learning universe starts here.
+                        </h3>
+
                         <p>
                             Add skills you can teach and skills you want to learn.
                         </p>
 
-                        <Link to="/my-skills" className="dashboard-button">
+                        <Link
+                            to="/my-skills"
+                            className="dashboard-button"
+                        >
                             Add Your Skills ↗
                         </Link>
+
                     </div>
+
                 </section>
 
                 {/* Explore Section */}
                 <section className="dashboard-section">
+
                     <div className="dashboard-section-heading">
+
                         <div>
-                            <p className="dashboard-eyebrow">DISCOVER SOMETHING NEW</p>
+                            <p className="dashboard-eyebrow">
+                                DISCOVER SOMETHING NEW
+                            </p>
+
                             <h2>Explore Your Community</h2>
                         </div>
+
                     </div>
 
                     <div className="explore-prompt">
+
                         <div>
-                            <h3>Someone in your campus knows what you want to learn.</h3>
-                            <p>Find your next learning partner today.</p>
+                            <h3>
+                                Someone in your campus knows what you want to learn.
+                            </h3>
+
+                            <p>
+                                Find your next learning partner today.
+                            </p>
                         </div>
 
-                        <Link to="/explore" className="dashboard-button">
+                        <Link
+                            to="/explore"
+                            className="dashboard-button"
+                        >
                             Explore Skills ↗
                         </Link>
+
                     </div>
+
                 </section>
 
             </main>
+
         </div>
     )
 }
