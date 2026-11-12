@@ -40,7 +40,11 @@ The main objective of SkillSwap Campus is to create a common platform where memb
 - JWT access-token generation.
 - JWT authentication middleware.
 - Protected API endpoint.
+- Skills API controllers for retrieving, adding and removing a student's skill associations.
+- Protected Skills API routes using JWT authentication middleware.
 - PostgreSQL database connection using Prisma ORM.
+
+**Implementation note:** The Skills API controllers and routes are implemented. GET and POST have been tested successfully; DELETE still requires an end-to-end test. The My Skills frontend is not yet connected to these APIs.
 
 ### Authentication and Security
 - Passwords are hashed before being stored.
@@ -48,8 +52,12 @@ The main objective of SkillSwap Campus is to create a common platform where memb
 - Basic email-format validation.
 - Duplicate email registration prevention.
 - JWT-based authentication.
-- Protected backend routes.
-- Frontend access restrictions for authenticated sessions.
+- Protected backend routes verify the supplied JWT.
+- Frontend protected routes currently check for a stored access token.
+- The access token and basic user information are stored in browser localStorage; the session remains present across page refreshes.
+- Logout clears the stored access token and user information.
+
+**Security follow-up:** Frontend startup/session handling still needs server-side token validation and expired-token handling. A token's presence in localStorage alone does not prove that it is valid.
 
 ## 🛠️ Technology Stack
 
@@ -79,14 +87,16 @@ SkillSwap/
 ├── server/
 │   ├── controllers/
 │   │   ├── auth.controller.js
-│   │   └── health.controller.js
+│   │   ├── health.controller.js
+│   │   └── skills.controller.js
 │   │
 │   ├── middleware/
 │   │   └── auth.middleware.js
 │   │
 │   ├── routes/
 │   │   ├── auth.routes.js
-│   │   └── health.routes.js
+│   │   ├── health.routes.js
+│   │   └── skills.routes.js
 │   │
 │   ├── db.js
 │   ├── index.js
@@ -208,6 +218,16 @@ http://localhost:5173
 | GET | `/api/auth/protected` | Test JWT-protected access |
 | GET | `/api/health` | Check backend health |
 
+### Skills API
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/skills` | Retrieve the logged-in student's teaching and learning skills |
+| POST | `/api/skills` | Add a skill association for the logged-in student |
+| DELETE | `/api/skills/:id` | Remove a skill association owned by the logged-in student |
+
+All Skills endpoints require JWT authentication. The POST endpoint accepts a JSON body with a skill name and a type of `TEACHING` or `LEARNING`. New skills are currently assigned to the `General` category when needed.
+
 Protected endpoints require a valid JWT access token in the Authorization header:
 
 ```text
@@ -231,24 +251,49 @@ The following features are planned or still under development:
 
 ## 📌 Latest Development Update
 
-**Latest pushed commit:** `fd28a3c`
+**Updated:** 12 November 2026  
+**Latest pushed commit:** `775c1b8`  
+**Commit message:** `Add skill management APIs and improve navigation`
 
-**Commit message:** `Build SkillSwap Campus authentication and backend`
+### Work completed in this update
 
-Recent development work includes:
+1. Updated the ESLint flat configuration so backend files use Node.js globals; removed an unused catch parameter in the authentication middleware.
+2. Added conditional homepage navigation:
+   - Logged-out visitors see **Log In** and **Sign Up**.
+   - Logged-in visitors see **Dashboard** and **My Skills**.
+3. Updated logout navigation so logging out clears the stored token and user information, then returns the user to the homepage.
+4. Created `server/controllers/skills.controller.js` with:
+   - `getMySkills` — retrieves the logged-in student's skill associations, including skill and category details.
+   - `addSkill` — validates the skill name and type, finds or creates the `General` category and skill, and creates the user's association inside a Prisma transaction.
+   - `deleteSkill` — removes a skill association only when it belongs to the logged-in student.
+5. Created `server/routes/skills.routes.js` and registered the protected routes under `/api/skills`.
+6. Kept the student's identity server-derived from the verified JWT rather than accepting a user ID from the request body.
 
-1. Established the PostgreSQL database using Prisma ORM.
-2. Created the initial database schema and migration.
-3. Implemented user registration and login APIs.
-4. Integrated bcrypt password hashing.
-5. Implemented JWT token generation and verification.
-6. Created authentication middleware for protected backend routes.
-7. Connected the frontend login page to the backend.
-8. Added protected frontend routes.
-9. Implemented logout functionality.
-10. Tested successful login, invalid credentials, missing tokens and invalid tokens.
+### Verification performed
 
-**Current Status:** The core registration and authentication workflow is implemented and tested. Other platform features are being developed progressively.
+- `npm run lint` — passed.
+- `npm run build` — passed.
+- Prisma PostgreSQL connection test — passed against `skillswap_db`.
+- Backend health endpoint — returned a successful response.
+- Registration duplicate-email handling — verified; an existing email was rejected rather than creating a duplicate account.
+- Login and dashboard navigation — verified using an existing account.
+- JWT-protected API — verified successfully.
+- Session behaviour — the stored login remained present after refreshing the dashboard and homepage; logging out cleared the local session and returned the user to the homepage.
+- Skills API GET — returned the logged-in student's skill associations.
+- Skills API POST — successfully saved a `Python` skill with type `TEACHING` under the `General` category.
+- Duplicate Skills API POST — returned HTTP `409 Conflict`, preventing a duplicate association.
+
+**Not yet completed:** The DELETE Skills API has been implemented but still needs end-to-end testing. The `MySkills.jsx` page currently uses frontend component state and has not yet been connected to the GET, POST and DELETE APIs. Frontend session restoration also needs proper token validation and expired-token handling; checking only whether a token exists is not sufficient.
+
+### Current development focus
+
+- Connect the My Skills page to the protected Skills APIs so additions and removals persist in PostgreSQL and remain visible after refresh.
+- Test the DELETE endpoint.
+- Build dynamic skill discovery and matching.
+- Implement exchange-request workflows and dynamic student profiles.
+- Complete dashboard statistics, end-to-end testing and evaluation preparation.
+
+**Current Status:** Registration, login and the initial authentication foundation are implemented and tested. The Skills backend endpoints are in place, with GET and POST verified. Frontend integration and remaining application workflows are in progress.
 
 ---
 
