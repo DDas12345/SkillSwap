@@ -1,4 +1,5 @@
 import '../App.css'
+import { Link } from 'react-router-dom'
 
 const skills = [
     {
@@ -52,6 +53,9 @@ const steps = [
 ]
 
 function Home() {
+    const isLoggedIn = Boolean(
+        localStorage.getItem('accessToken')
+    )
     return (
         <div className="app-shell">
             <header className="site-header">
@@ -66,9 +70,37 @@ function Home() {
                     <a href="#about">About us</a>
                 </nav>
 
-                <a className="button button-small button-dark" href="#get-started">
-                    Join the community <span aria-hidden="true">↗</span>
-                </a>
+                {isLoggedIn ? (
+                    <div className="hero-actions">
+                        <Link
+                            to="/dashboard"
+                            className="button button-small button-dark"
+                        >
+                            Dashboard ↗
+                        </Link>
+                        <Link
+                            to="/my-skills"
+                            className="button button-small button-outline"
+                        >
+                            My Skills
+                        </Link>
+                    </div>
+                ) : (
+                    <div className="hero-actions">
+                        <Link
+                            to="/login"
+                            className="button button-small button-outline"
+                        >
+                            Log In
+                        </Link>
+                        <Link
+                            to="/register"
+                            className="button button-small button-dark"
+                        >
+                            Sign Up ↗
+                        </Link>
+                    </div>
+                )}
             </header>
 
             <main>

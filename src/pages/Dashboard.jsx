@@ -13,7 +13,7 @@ function Dashboard() {
         localStorage.removeItem('accessToken')
         localStorage.removeItem('user')
 
-        navigate('/login', { replace: true })
+        navigate('/', { replace: true })
     }
 
     const userName = user.fullName || 'Student'
