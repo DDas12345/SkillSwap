@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import '../App.css'
 
@@ -10,35 +10,156 @@ function MySkills() {
     const [teachInput, setTeachInput] = useState('')
     const [learnInput, setLearnInput] = useState('')
 
-    const addSkill = (type) => {
-        if (type === 'teach') {
-            const skill = teachInput.trim()
+    // API loading and error states
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState('')
 
-            if (!skill || teachingSkills.includes(skill)) return
+    // Fetch skills when the page loads
+    useEffect(() => {
+        const fetchMySkills = async () => {
+            try {
+                const token = localStorage.getItem('accessToken')
 
-            setTeachingSkills([...teachingSkills, skill])
-            setTeachInput('')
+                if (!token) {
+                    throw new Error('Please log in to view your skills.')
+                }
+
+                const response = await fetch('http://localhost:5001/api/skills', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+
+                const data = await response.json()
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to load skills.')
+                }
+
+                setTeachingSkills(
+                    data.skills.filter((skill) => skill.type === 'TEACHING')
+                )
+
+                setLearningSkills(
+                    data.skills.filter((skill) => skill.type === 'LEARNING')
+                )
+
+            } catch (err) {
+                setError(err.message)
+            } finally {
+                setIsLoading(false)
+            }
         }
 
-        if (type === 'learn') {
-            const skill = learnInput.trim()
+        fetchMySkills()
+    }, [])
 
-            if (!skill || learningSkills.includes(skill)) return
+    // Add a skill through the backend API
+    const addSkill = async (type) => {
+        const skill = type === 'teach'
+            ? teachInput.trim()
+            : learnInput.trim()
 
-            setLearningSkills([...learningSkills, skill])
-            setLearnInput('')
+        if (!skill) return
+
+        try {
+            setError('')
+
+            const token = localStorage.getItem('accessToken')
+
+            if (!token) {
+                throw new Error('Please log in to add a skill.')
+            }
+
+            const response = await fetch('http://localhost:5001/api/skills', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    name: skill,
+                    type: type === 'teach' ? 'TEACHING' : 'LEARNING'
+                })
+            })
+
+            const result = await response.json()
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Failed to add skill.')
+            }
+
+            // Fetch the updated skill list
+            const updatedResponse = await fetch('http://localhost:5001/api/skills', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+
+            const updatedData = await updatedResponse.json()
+
+            if (!updatedResponse.ok) {
+                throw new Error(updatedData.message || 'Could not refresh skills.')
+            }
+
+            setTeachingSkills(
+                updatedData.skills.filter((item) => item.type === 'TEACHING')
+            )
+
+            setLearningSkills(
+                updatedData.skills.filter((item) => item.type === 'LEARNING')
+            )
+
+            if (type === 'teach') {
+                setTeachInput('')
+            } else {
+                setLearnInput('')
+            }
+
+        } catch (err) {
+            setError(err.message)
         }
     }
 
-    const removeSkill = (type, skillToRemove) => {
-        if (type === 'teach') {
-            setTeachingSkills(
-                teachingSkills.filter((skill) => skill !== skillToRemove)
+    // Delete a skill through the backend API
+    const removeSkill = async (type, skillId) => {
+        try {
+            setError('')
+
+            const token = localStorage.getItem('accessToken')
+
+            if (!token) {
+                throw new Error('Please log in to remove a skill.')
+            }
+
+            const response = await fetch(
+                `http://localhost:5001/api/skills/${skillId}`,
+                {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
             )
-        } else {
-            setLearningSkills(
-                learningSkills.filter((skill) => skill !== skillToRemove)
-            )
+
+            const result = await response.json()
+
+            if (!response.ok) {
+                throw new Error(result.message || 'Failed to remove skill.')
+            }
+
+            if (type === 'teach') {
+                setTeachingSkills((previousSkills) =>
+                    previousSkills.filter((skill) => skill.id !== skillId)
+                )
+            } else {
+                setLearningSkills((previousSkills) =>
+                    previousSkills.filter((skill) => skill.id !== skillId)
+                )
+            }
+
+        } catch (err) {
+            setError(err.message)
         }
     }
 
@@ -75,107 +196,121 @@ function MySkills() {
                     </p>
                 </section>
 
-                <div className="my-skills-grid">
+                {error && (
+                    <p className="skills-empty" role="alert">
+                        {error}
+                    </p>
+                )}
 
-                    {/* Skills I Can Teach */}
-                    <section className="my-skills-card">
-                        <div className="skills-card-heading">
-                            <span className="skills-icon">🎓</span>
-                            <div>
-                                <h2>Skills I Can Teach</h2>
-                                <p>Share your knowledge with others.</p>
+                {isLoading ? (
+                    <p className="skills-empty">
+                        Loading your skills...
+                    </p>
+                ) : (
+                    <div className="my-skills-grid">
+
+                        {/* Skills I Can Teach */}
+                        <section className="my-skills-card">
+                            <div className="skills-card-heading">
+                                <span className="skills-icon">🎓</span>
+                                <div>
+                                    <h2>Skills I Can Teach</h2>
+                                    <p>Share your knowledge with others.</p>
+                                </div>
                             </div>
-                        </div>
 
-                        <form
-                            className="add-skill-form"
-                            onSubmit={(event) => {
-                                event.preventDefault()
-                                addSkill('teach')
-                            }}
-                        >
-                            <input
-                                type="text"
-                                placeholder="Enter a skill you can teach..."
-                                value={teachInput}
-                                onChange={(event) => setTeachInput(event.target.value)}
-                            />
+                            <form
+                                className="add-skill-form"
+                                onSubmit={(event) => {
+                                    event.preventDefault()
+                                    addSkill('teach')
+                                }}
+                            >
+                                <input
+                                    type="text"
+                                    placeholder="Enter a skill you can teach..."
+                                    value={teachInput}
+                                    onChange={(event) => setTeachInput(event.target.value)}
+                                />
 
-                            <button type="submit">+ Add Skill</button>
-                        </form>
+                                <button type="submit">+ Add Skill</button>
+                            </form>
 
-                        <div className="my-skill-list">
-                            {teachingSkills.length === 0 ? (
-                                <p className="skills-empty">
-                                    You haven't added any teaching skills yet.
-                                </p>
-                            ) : (
-                                teachingSkills.map((skill) => (
-                                    <div className="my-skill-item" key={skill}>
-                                        <span>{skill}</span>
-                                        <button
-                                            type="button"
-                                            onClick={() => removeSkill('teach', skill)}
-                                            aria-label={`Remove ${skill}`}
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    </section>
+                            <div className="my-skill-list">
+                                {teachingSkills.length === 0 ? (
+                                    <p className="skills-empty">
+                                        You haven't added any teaching skills yet.
+                                    </p>
+                                ) : (
+                                    teachingSkills.map((skill) => (
+                                        <div className="my-skill-item" key={skill.id}>
+                                            <span>{skill.skill.name}</span>
 
-                    {/* Skills I Want to Learn */}
-                    <section className="my-skills-card">
-                        <div className="skills-card-heading">
-                            <span className="skills-icon">🌱</span>
-                            <div>
-                                <h2>Skills I Want to Learn</h2>
-                                <p>Discover new things and grow.</p>
+                                            <button
+                                                type="button"
+                                                onClick={() => removeSkill('teach', skill.id)}
+                                                aria-label={`Remove ${skill.skill.name}`}
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    ))
+                                )}
                             </div>
-                        </div>
+                        </section>
 
-                        <form
-                            className="add-skill-form"
-                            onSubmit={(event) => {
-                                event.preventDefault()
-                                addSkill('learn')
-                            }}
-                        >
-                            <input
-                                type="text"
-                                placeholder="Enter a skill you want to learn..."
-                                value={learnInput}
-                                onChange={(event) => setLearnInput(event.target.value)}
-                            />
+                        {/* Skills I Want to Learn */}
+                        <section className="my-skills-card">
+                            <div className="skills-card-heading">
+                                <span className="skills-icon">🌱</span>
+                                <div>
+                                    <h2>Skills I Want to Learn</h2>
+                                    <p>Discover new things and grow.</p>
+                                </div>
+                            </div>
 
-                            <button type="submit">+ Add Skill</button>
-                        </form>
+                            <form
+                                className="add-skill-form"
+                                onSubmit={(event) => {
+                                    event.preventDefault()
+                                    addSkill('learn')
+                                }}
+                            >
+                                <input
+                                    type="text"
+                                    placeholder="Enter a skill you want to learn..."
+                                    value={learnInput}
+                                    onChange={(event) => setLearnInput(event.target.value)}
+                                />
 
-                        <div className="my-skill-list">
-                            {learningSkills.length === 0 ? (
-                                <p className="skills-empty">
-                                    You haven't added any learning skills yet.
-                                </p>
-                            ) : (
-                                learningSkills.map((skill) => (
-                                    <div className="my-skill-item" key={skill}>
-                                        <span>{skill}</span>
-                                        <button
-                                            type="button"
-                                            onClick={() => removeSkill('learn', skill)}
-                                            aria-label={`Remove ${skill}`}
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    </section>
+                                <button type="submit">+ Add Skill</button>
+                            </form>
 
-                </div>
+                            <div className="my-skill-list">
+                                {learningSkills.length === 0 ? (
+                                    <p className="skills-empty">
+                                        You haven't added any learning skills yet.
+                                    </p>
+                                ) : (
+                                    learningSkills.map((skill) => (
+                                        <div className="my-skill-item" key={skill.id}>
+                                            <span>{skill.skill.name}</span>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => removeSkill('learn', skill.id)}
+                                                aria-label={`Remove ${skill.skill.name}`}
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </section>
+
+                    </div>
+                )}
 
                 <section className="skills-summary">
                     <h2>Your Skill Summary</h2>
