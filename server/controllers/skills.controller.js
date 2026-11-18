@@ -36,6 +36,67 @@ export const getMySkills = async (req, res) => {
   }
 };
 
+export const getExploreSkills = async (req, res) => {
+  try {
+    // Get the logged-in student's ID
+    const currentUserId = req.user.userId;
+
+    // Find teaching skills shared by other students
+    const teachingSkills = await prisma.userSkill.findMany({
+      where: {
+        type: "TEACHING",
+        userId: {
+          not: currentUserId,
+        },
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            fullName: true,
+            course: true,
+            yearOfStudy: true,
+            bio: true,
+          },
+        },
+        skill: {
+          include: {
+            category: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    // Prepare student information for the Explore page
+    const students = teachingSkills.map((userSkill) => ({
+      id: userSkill.id,
+      userId: userSkill.user.id,
+      fullName: userSkill.user.fullName,
+      course: userSkill.user.course,
+      yearOfStudy: userSkill.user.yearOfStudy,
+      bio: userSkill.user.bio,
+      skillId: userSkill.skill.id,
+      skill: userSkill.skill.name,
+      category: userSkill.skill.category.name,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      students,
+    });
+  } catch (error) {
+    console.error("Explore skills error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to explore student skills.",
+    });
+  }
+};
+
 export const addSkill = async (req, res) => {
   try {
     // 1. Get the logged-in user's ID
@@ -166,7 +227,6 @@ export const deleteSkill = async (req, res) => {
       success: true,
       message: "Skill removed successfully!",
     });
-
   } catch (error) {
     console.error("Delete skill error:", error);
 

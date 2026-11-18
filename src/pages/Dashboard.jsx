@@ -1,9 +1,11 @@
-
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import '../App.css'
 
 function Dashboard() {
     const navigate = useNavigate()
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
 
     // Get the logged-in user's information
     const user = JSON.parse(localStorage.getItem('user') || '{}')
@@ -23,7 +25,20 @@ function Dashboard() {
         <div className="dashboard-page">
 
             {/* Sidebar */}
-            <aside className="dashboard-sidebar">
+            <aside
+                className={`dashboard-sidebar ${isSidebarCollapsed ? 'collapsed' : ''
+                    } ${isMobileSidebarOpen ? 'mobile-open' : ''}`}
+            >
+
+                <button
+                    type="button"
+                    className="sidebar-toggle"
+                    onClick={() => setIsSidebarCollapsed((previous) => !previous)}
+                    aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                    aria-expanded={!isSidebarCollapsed}
+                >
+                    {isSidebarCollapsed ? '☰' : '←'}
+                </button>
 
                 <div className="dashboard-brand">
                     <span className="brand-symbol">S</span>
@@ -34,24 +49,29 @@ function Dashboard() {
 
                 <nav className="dashboard-nav">
 
-                    <Link to="/dashboard" className="active">
-                        🏠 Dashboard
+                    <Link to="/dashboard" className="active" title="Dashboard">
+                        <span className="sidebar-link-icon">🏠</span>
+                        <span className="sidebar-link-label">Dashboard</span>
                     </Link>
 
-                    <Link to="/explore">
-                        🔍 Explore Skills
+                    <Link to="/explore" title="Explore Skills">
+                        <span className="sidebar-link-icon">🔍</span>
+                        <span className="sidebar-link-label">Explore Skills</span>
                     </Link>
 
-                    <Link to="/my-skills">
-                        ✨ My Skills
+                    <Link to="/my-skills" title="My Skills">
+                        <span className="sidebar-link-icon">✨</span>
+                        <span className="sidebar-link-label">My Skills</span>
                     </Link>
 
-                    <Link to="/requests">
-                        💌 Exchange Requests
+                    <Link to="/requests" title="Exchange Requests">
+                        <span className="sidebar-link-icon">💌</span>
+                        <span className="sidebar-link-label">Exchange Requests</span>
                     </Link>
 
-                    <Link to="/profile">
-                        👤 My Profile
+                    <Link to="/profile" title="My Profile">
+                        <span className="sidebar-link-icon">👤</span>
+                        <span className="sidebar-link-label">My Profile</span>
                     </Link>
 
                 </nav>
@@ -74,8 +94,27 @@ function Dashboard() {
 
             </aside>
 
+            {isMobileSidebarOpen && (
+                <button
+                    type="button"
+                    className="mobile-sidebar-backdrop"
+                    onClick={() => setIsMobileSidebarOpen(false)}
+                    aria-label="Close navigation menu"
+                />
+            )}
+
             {/* Main Content */}
             <main className="dashboard-main">
+
+                <button
+                    type="button"
+                    className="mobile-menu-toggle"
+                    onClick={() => setIsMobileSidebarOpen((previous) => !previous)}
+                    aria-label={isMobileSidebarOpen ? 'Close menu' : 'Open menu'}
+                    aria-expanded={isMobileSidebarOpen}
+                >
+                    {isMobileSidebarOpen ? '✕' : '☰'}
+                </button>
 
                 <header className="dashboard-header">
 
@@ -140,10 +179,6 @@ function Dashboard() {
 
                             <h2>My Skills</h2>
                         </div>
-
-                        <Link to="/my-skills">
-                            Manage Skills ↗
-                        </Link>
 
                     </div>
 

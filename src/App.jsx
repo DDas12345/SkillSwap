@@ -6,6 +6,8 @@ import Login from './pages/auth/Login'
 import Dashboard from './pages/Dashboard'
 import ExploreSkills from './pages/ExploreSkills'
 import MySkills from './pages/MySkills'
+import { ThemeProvider } from './context/ThemeContext'
+import Welcome from './pages/Welcome'
 
 // Protect routes that require login
 function ProtectedRoute({ children }) {
@@ -20,41 +22,43 @@ function ProtectedRoute({ children }) {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+    <ThemeProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Welcome />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/explore"
-          element={
-            <ProtectedRoute>
-              <ExploreSkills />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/explore"
+            element={
+              <ProtectedRoute>
+                <ExploreSkills />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/my-skills"
-          element={
-            <ProtectedRoute>
-              <MySkills />
-            </ProtectedRoute>
-          }
-        />
-
-      </Routes>
-    </BrowserRouter>
+          <Route
+            path="/my-skills"
+            element={
+              <ProtectedRoute>
+                <MySkills />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   )
 }
 

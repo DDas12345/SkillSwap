@@ -1,78 +1,106 @@
-
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import '../App.css'
 
-const students = [
-    {
-        id: 1,
-        name: 'Aarav Sharma',
-        initials: 'AS',
-        department: 'Computer Science',
-        year: '2nd Year',
-        skill: 'Python',
-        category: 'Technology',
-        icon: '💻',
-        description: 'I can teach Python fundamentals and problem solving.',
-    },
-    {
-        id: 2,
-        name: 'Riya Mehta',
-        initials: 'RM',
-        department: 'Design',
-        year: '2nd Year',
-        skill: 'UI/UX Design',
-        category: 'Design',
-        icon: '🎨',
-        description: 'I can help you learn Figma and interface design.',
-    },
-    {
-        id: 3,
-        name: 'Kabir Verma',
-        initials: 'KV',
-        department: 'Computer Science',
-        year: '3rd Year',
-        skill: 'React',
-        category: 'Technology',
-        icon: '⚛️',
-        description: 'I can teach React components and frontend basics.',
-    },
-    {
-        id: 4,
-        name: 'Ananya Das',
-        initials: 'AD',
-        department: 'Business',
-        year: '1st Year',
-        skill: 'Public Speaking',
-        category: 'Communication',
-        icon: '🗣️',
-        description: 'I can help improve confidence and presentation skills.',
-    },
-    {
-        id: 5,
-        name: 'Ishaan Kapoor',
-        initials: 'IK',
-        department: 'Business',
-        year: '3rd Year',
-        skill: 'Resume Building',
-        category: 'Career',
-        icon: '📈',
-        description: 'I can help you create professional resumes.',
-    },
-]
-
-const categories = [
-    'All',
-    'Technology',
-    'Design',
-    'Communication',
-    'Career',
-]
+const categoryIcons = {
+    Technology: '💻',
+    Design: '🎨',
+    Communication: '🗣️',
+    Career: '📈',
+    General: '✨'
+}
 
 function ExploreSkills() {
+    const isLoggedIn = Boolean(
+        localStorage.getItem('accessToken')
+    )
     const [search, setSearch] = useState('')
     const [selectedCategory, setSelectedCategory] = useState('All')
     const [sentRequests, setSentRequests] = useState([])
+
+    // Students fetched from the backend
+    const [students, setStudents] = useState([])
+
+    // Loading and error states
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState('')
+
+    useEffect(() => {
+        const fetchStudents = async () => {
+            try {
+                setError('')
+
+                const token = localStorage.getItem('accessToken')
+
+                if (!token) {
+                    throw new Error('Please log in to explore students.')
+                }
+
+                const response = await fetch(
+                    'http://localhost:5001/api/skills/explore',
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                )
+
+                const data = await response.json()
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message || 'Failed to load students.'
+                    )
+                }
+
+                // Convert API records into the format used by our cards
+                const formattedStudents = data.students.map((student) => {
+                    const yearNumber = Number(student.yearOfStudy)
+
+                    let yearLabel = 'Year not specified'
+
+                    if (yearNumber >= 1 && yearNumber <= 4) {
+                        const suffix = {
+                            1: 'st',
+                            2: 'nd',
+                            3: 'rd',
+                            4: 'th'
+                        }[yearNumber]
+
+                        yearLabel = `${yearNumber}${suffix} Year`
+                    }
+
+                    return {
+                        id: student.id,
+                        userId: student.userId,
+                        name: student.fullName,
+                        initials: student.fullName
+                            .split(' ')
+                            .map((part) => part[0])
+                            .slice(0, 2)
+                            .join('')
+                            .toUpperCase(),
+                        department: student.course || 'Course not specified',
+                        year: yearLabel,
+                        skill: student.skill,
+                        category: student.category,
+                        icon: categoryIcons[student.category] || '✨',
+                        description: student.bio ||
+                            'This student is sharing this skill with the campus community.'
+                    }
+                })
+
+                setStudents(formattedStudents)
+
+            } catch (err) {
+                setError(err.message)
+            } finally {
+                setIsLoading(false)
+            }
+        }
+
+        fetchStudents()
+    }, [])
 
     // Handle connection requests
     const handleConnect = (student) => {
@@ -85,6 +113,16 @@ function ExploreSkills() {
             student.id,
         ])
     }
+
+    // Generate categories from the students fetched from the database
+    const categories = [
+        'All',
+        ...new Set(
+            students
+                .map((student) => student.category)
+                .filter(Boolean)
+        )
+    ]
 
     // Search and category filtering
     const filteredStudents = students.filter((student) => {
@@ -112,8 +150,17 @@ function ExploreSkills() {
                 </Link>
 
                 <nav className="explore-nav">
-                    <Link to="/dashboard">Dashboard</Link>
-                    <Link to="/login">Log In</Link>
+                    {isLoggedIn ? (
+                        <>
+                            <Link to="/dashboard">Dashboard</Link>
+                            <Link to="/my-skills">My Skills</Link>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/login">Log In</Link>
+                            <Link to="/register">Sign Up</Link>
+                        </>
+                    )}
                 </nav>
             </header>
 
@@ -175,6 +222,20 @@ function ExploreSkills() {
                         <span>{filteredStudents.length} results</span>
                     </div>
 
+                    {/* Loading message */}
+                    {isLoading && (
+                        <div className="no-results">
+                            <p>Loading students...</p>
+                        </div>
+                    )}
+
+                    {/* Error message */}
+                    {error && (
+                        <div className="no-results" role="alert">
+                            <p>{error}</p>
+                        </div>
+                    )}
+
                     <div className="student-grid">
 
                         {filteredStudents.map((student) => (
@@ -209,8 +270,8 @@ function ExploreSkills() {
                                 {/* Connection Request Button */}
                                 <button
                                     className={`connect-button ${sentRequests.includes(student.id)
-                                            ? 'request-sent'
-                                            : ''
+                                        ? 'request-sent'
+                                        : ''
                                         }`}
                                     type="button"
                                     onClick={() => handleConnect(student)}
@@ -235,11 +296,11 @@ function ExploreSkills() {
                     </div>
 
                     {/* No Results Message */}
-                    {filteredStudents.length === 0 && (
+                    {!isLoading && !error && filteredStudents.length === 0 && (
                         <div className="no-results">
                             <span>🌌</span>
-                            <h3>No matching skills found</h3>
-                            <p>Try another search or category.</p>
+                            <h3>No students sharing skills yet</h3>
+                            <p>Be the first to share your knowledge with the campus community!</p>
                         </div>
                     )}
 

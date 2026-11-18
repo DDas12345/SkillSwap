@@ -2554,16 +2554,1205 @@
 }
 
 .dashboard-logout {
-    background: none;
-    border: none;
-    padding: 0;
-    color: inherit;
-    font: inherit;
-    text-align: left;
-    cursor: pointer;
-    width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
 }
 
 .dashboard-logout:hover {
-    opacity: 0.7;
+  opacity: 0.7;
+}
+
+/* ==========================================
+   SKILLSWAP CAMPUS — RISHIHOOD WELCOME PAGE
+========================================== */
+
+.theme-root {
+  min-height: 100vh;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Full-screen campus background */
+
+.welcome-page {
+  min-height: 100vh;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(8, 11, 26, 0.94) 0%,
+      rgba(8, 11, 26, 0.78) 48%,
+      rgba(8, 11, 26, 0.18) 100%
+    ),
+    url("/rishihood-campus.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.welcome-overlay {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 80px 9%;
+}
+
+.welcome-content {
+  max-width: 720px;
+}
+
+.welcome-university {
+  display: inline-block;
+  margin-bottom: 25px;
+  padding: 10px 16px;
+  border: 1px solid rgba(196, 173, 255, 0.4);
+  border-radius: 30px;
+  background: rgba(129, 87, 232, 0.15);
+  color: #d0bdff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.welcome-content h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(42px, 6vw, 76px);
+  line-height: 1.1;
+  letter-spacing: -3px;
+}
+
+.welcome-content h1 span {
+  color: #c4adff;
+}
+
+.welcome-description {
+  max-width: 570px;
+  margin: 25px 0 35px;
+  color: #e0ddf0;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.welcome-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 25px;
+  border-radius: 10px;
+  background: linear-gradient(110deg, #7955db, #477bff);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 8px 30px rgba(111, 85, 225, 0.3);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.welcome-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(111, 85, 225, 0.4);
+}
+
+.welcome-button span {
+  font-size: 20px;
+}
+
+.welcome-footer {
+  margin-top: 65px;
+  color: #bdb8d4;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+/* ==========================================
+   RISHIHOOD LIGHT — ORANGE AND WHITE
+========================================== */
+
+.theme-root[data-theme="light"] .welcome-page {
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(255, 250, 245, 0.96) 0%,
+      rgba(255, 247, 238, 0.88) 48%,
+      rgba(255, 247, 238, 0.22) 100%
+    ),
+    url("/rishihood-campus.png");
+}
+
+.theme-root[data-theme="light"] .welcome-university {
+  border-color: rgba(181, 6, 47, 0.22);
+  background: rgba(181, 6, 47, 0.07);
+  color: #b5062f;
+}
+
+.theme-root[data-theme="light"] .welcome-content h1 {
+  color: #292329;
+}
+
+.theme-root[data-theme="light"] .welcome-content h1 span {
+  color: #b5062f;
+}
+
+.theme-root[data-theme="light"] .welcome-description {
+  color: #55494a;
+}
+
+.theme-root[data-theme="light"] .welcome-button {
+  background: linear-gradient(110deg, #b5062f, #e8a559);
+  color: #ffffff;
+  box-shadow: 0 8px 25px rgba(181, 6, 47, 0.2);
+}
+
+.theme-root[data-theme="light"] .welcome-button:hover {
+  box-shadow: 0 12px 30px rgba(181, 6, 47, 0.3);
+}
+
+.theme-root[data-theme="light"] .welcome-footer {
+  color: #735a54;
+}
+
+/* ==========================================
+   GLOBAL THEME TOGGLE
+========================================== */
+
+.theme-toggle {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  z-index: 1000;
+  padding: 12px 17px;
+  border: 1px solid rgba(190, 170, 255, 0.3);
+  border-radius: 30px;
+  background: #17152d;
+  color: #f5f0ff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  transition: all 0.25s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-3px);
+}
+
+.theme-root[data-theme="light"] .theme-toggle {
+  border-color: rgba(181, 6, 47, 0.2);
+  background: #ffffff;
+  color: #b5062f;
+  box-shadow: 0 5px 22px rgba(181, 6, 47, 0.12);
+}
+
+/* Mobile adjustments */
+
+@media (max-width: 600px) {
+  .welcome-overlay {
+    padding: 65px 7%;
+  }
+
+  .welcome-content h1 {
+    font-size: clamp(38px, 10vw, 55px);
+    letter-spacing: -2px;
+  }
+
+  .welcome-description {
+    font-size: 14px;
+  }
+
+  .welcome-footer {
+    margin-top: 45px;
+  }
+
+  .theme-toggle {
+    right: 15px;
+    bottom: 15px;
+  }
+}
+
+/* ==========================================
+   RISHIHOOD LIGHT — MAIN HOMEPAGE
+========================================== */
+
+.theme-root[data-theme="light"] .app-shell {
+    --ink: #292329;
+    --muted: #706264;
+    --green: #B5062F;
+    --lime: #E8A559;
+    --paper: #FFF9F4;
+    --white: #FFFFFF;
+    --line: #EADDD6;
+
+    background:
+        radial-gradient(
+            ellipse at 15% 10%,
+            rgba(232, 165, 89, 0.13),
+            transparent 40%
+        ),
+        #FFF9F4;
+    color: var(--ink);
+}
+
+/* Header */
+
+.theme-root[data-theme="light"] .app-shell .site-header {
+    background: rgba(255, 249, 244, 0.94);
+    border-bottom: 1px solid var(--line);
+}
+
+.theme-root[data-theme="light"] .app-shell .brand {
+    color: var(--ink);
+}
+
+.theme-root[data-theme="light"] .app-shell .brand-highlight {
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .app-shell .navigation a {
+    color: #65575A;
+}
+
+.theme-root[data-theme="light"] .app-shell .navigation a:hover {
+    color: #B5062F;
+}
+
+/* Buttons */
+
+.theme-root[data-theme="light"] .app-shell .button-dark,
+.theme-root[data-theme="light"] .app-shell .button-primary {
+    background: linear-gradient(110deg, #B5062F, #E8A559);
+    color: #FFFFFF;
+}
+
+.theme-root[data-theme="light"] .app-shell .button-dark:hover,
+.theme-root[data-theme="light"] .app-shell .button-primary:hover {
+    background: linear-gradient(110deg, #921027, #D98B42);
+}
+
+.theme-root[data-theme="light"] .app-shell .button-outline {
+    border-color: rgba(181, 6, 47, 0.25);
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .app-shell .button-outline:hover {
+    background: rgba(181, 6, 47, 0.06);
+}
+
+/* Hero */
+
+.theme-root[data-theme="light"] .app-shell .eyebrow {
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .app-shell .hero-copy > .eyebrow {
+    background: #FBEDE9;
+    border-color: #F0D1CC;
+}
+
+.theme-root[data-theme="light"] .app-shell .eyebrow-dot,
+.theme-root[data-theme="light"] .app-shell .match-status > span {
+    background: #E8A559;
+}
+
+.theme-root[data-theme="light"] .app-shell .hero-copy h1 {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .app-shell .highlight-text {
+    color: #B5062F;
+    text-decoration-color: #E8A559;
+}
+
+.theme-root[data-theme="light"] .app-shell .hero-description,
+.theme-root[data-theme="light"] .app-shell .hero-note p {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .app-shell .hero-note strong {
+    color: #B5062F;
+}
+
+/* Hero illustration */
+
+.theme-root[data-theme="light"] .app-shell .hero-visual {
+    background: radial-gradient(
+        ellipse at center,
+        rgba(232, 165, 89, 0.23),
+        transparent 70%
+    );
+}
+
+.theme-root[data-theme="light"] .app-shell .visual-orbit {
+    border-color: rgba(181, 6, 47, 0.13);
+}
+
+.theme-root[data-theme="light"] .app-shell .match-card,
+.theme-root[data-theme="light"] .app-shell .floating-label {
+    background: #FFFFFF;
+    border-color: #EADDD6;
+    color: #292329;
+    box-shadow: 0 20px 55px rgba(76, 35, 35, 0.09);
+}
+
+.theme-root[data-theme="light"] .app-shell .student-profile h3 {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .app-shell .student-profile p,
+.theme-root[data-theme="light"] .app-shell .match-card-footer {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .app-shell .student-profile,
+.theme-root[data-theme="light"] .app-shell .match-card-footer {
+    border-color: #EADDD6;
+}
+
+.theme-root[data-theme="light"] .app-shell .skill-purple {
+    background: #FBE8EB;
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .app-shell .skill-green {
+    background: #FFF0DF;
+    color: #8C5426;
+}
+
+.theme-root[data-theme="light"] .app-shell .floating-label {
+    background: #FFFFFF;
+}
+
+.theme-root[data-theme="light"] .app-shell .label-icon,
+.theme-root[data-theme="light"] .app-shell .label-icon-green,
+.theme-root[data-theme="light"] .app-shell .decorative-sparkle {
+    color: #B5062F;
+}
+
+/* Community strip */
+
+.theme-root[data-theme="light"] .app-shell .community-strip {
+    background: #FFFFFF;
+    border-color: #EADDD6;
+}
+
+.theme-root[data-theme="light"] .app-shell .community-strip span {
+    color: #B5062F;
+}
+
+/* How it works */
+
+.theme-root[data-theme="light"] .app-shell .step-card {
+    background: #FFFFFF;
+    border-color: #EADDD6;
+}
+
+.theme-root[data-theme="light"] .app-shell .step-card h3,
+.theme-root[data-theme="light"] .app-shell .skill-card h3 {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .app-shell .step-card > p,
+.theme-root[data-theme="light"] .app-shell .skill-card > p {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .app-shell .step-icon {
+    background: #FBE8EB;
+    color: #B5062F;
+}
+
+/* Explore skills */
+
+.theme-root[data-theme="light"] .app-shell .skills-section {
+    background: #FFF0E6;
+}
+
+.theme-root[data-theme="light"] .app-shell .skill-card {
+    background: #FFFFFF;
+    border-color: #EADDD6;
+}
+
+.theme-root[data-theme="light"] .app-shell .skill-card:hover {
+    box-shadow: 0 12px 35px rgba(181, 6, 47, 0.1);
+}
+
+.theme-root[data-theme="light"] .app-shell .mint,
+.theme-root[data-theme="light"] .app-shell .lavender,
+.theme-root[data-theme="light"] .app-shell .peach,
+.theme-root[data-theme="light"] .app-shell .blue {
+    background: #FBE8EB;
+}
+
+.theme-root[data-theme="light"] .app-shell .skill-link {
+    color: #B5062F;
+}
+
+/* Call to action */
+
+.theme-root[data-theme="light"] .app-shell .cta-card {
+    background: linear-gradient(120deg, #9E1230, #B5062F, #D47B3F);
+    border: 1px solid rgba(181, 6, 47, 0.2);
+}
+
+.theme-root[data-theme="light"] .app-shell .cta-card .eyebrow {
+    color: #FFE0C7;
+}
+
+.theme-root[data-theme="light"] .app-shell .cta-card h2,
+.theme-root[data-theme="light"] .app-shell .cta-description {
+    color: #FFFFFF;
+}
+
+.theme-root[data-theme="light"] .app-shell .cta-card h2 span {
+    color: #FFE0B5;
+}
+
+.theme-root[data-theme="light"] .app-shell .cta-decoration {
+    color: rgba(255, 255, 255, 0.12);
+}
+
+.theme-root[data-theme="light"] .app-shell .cta-card .button-dark {
+    background: #FFFFFF;
+    color: #B5062F;
+}
+
+/* Footer */
+
+.theme-root[data-theme="light"] .app-shell .site-footer {
+    background: #FFFFFF;
+    border-color: #EADDD6;
+}
+
+.theme-root[data-theme="light"] .app-shell .site-footer .brand {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .app-shell .site-footer > p,
+.theme-root[data-theme="light"] .app-shell .footer-year {
+    color: #706264;
+}
+
+/* ==========================================
+   SHARED SKILLSWAP BRAND — RISHIHOOD LIGHT
+========================================== */
+
+.theme-root[data-theme="light"] .brand-symbol {
+    background: linear-gradient(135deg, #B5062F, #E8A559);
+    color: #FFFFFF;
+}
+
+.theme-root[data-theme="light"] .brand-highlight {
+    color: #B5062F;
+}
+
+/* ==========================================
+   DASHBOARD — RISHIHOOD LIGHT
+========================================== */
+
+.theme-root[data-theme="light"] .dashboard-page {
+    background: #FFF9F4;
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .dashboard-sidebar {
+    background: #FFFFFF;
+    border-right-color: #EADDD6;
+    box-shadow: 4px 0 20px rgba(76, 35, 35, 0.04);
+}
+
+.theme-root[data-theme="light"] .dashboard-brand {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .dashboard-nav a,
+.theme-root[data-theme="light"] .sidebar-bottom a {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .dashboard-nav a:hover,
+.theme-root[data-theme="light"] .dashboard-nav a.active {
+    background: #FBE8EB;
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .dashboard-logout {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .dashboard-eyebrow {
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .dashboard-header h1,
+.theme-root[data-theme="light"] .dashboard-section-heading h2 {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .dashboard-header > div > p:last-child {
+    color: #706264;
+}
+
+/* Statistics cards */
+
+.theme-root[data-theme="light"] .stat-card {
+    background: #FFFFFF;
+    border-color: #EADDD6;
+    box-shadow: 0 8px 25px rgba(76, 35, 35, 0.05);
+}
+
+.theme-root[data-theme="light"] .stat-card h2 {
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .stat-card p {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .stat-card:hover {
+    border-color: #E8A559;
+    box-shadow: 0 12px 30px rgba(181, 6, 47, 0.08);
+}
+
+/* Dashboard links and empty state */
+
+.theme-root[data-theme="light"] .dashboard-section-heading > a {
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .empty-state {
+    background: #FFFFFF;
+    border-color: #EADDD6;
+}
+
+.theme-root[data-theme="light"] .empty-state h3 {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .empty-state p {
+    color: #706264;
+}
+
+/* Dashboard action buttons */
+
+.theme-root[data-theme="light"] .dashboard-button {
+    background: linear-gradient(110deg, #B5062F, #E8A559);
+    color: #FFFFFF;
+}
+
+.theme-root[data-theme="light"] .dashboard-button:hover {
+    box-shadow: 0 8px 25px rgba(181, 6, 47, 0.2);
+}
+
+/* Explore community prompt */
+
+.theme-root[data-theme="light"] .explore-prompt {
+    background: linear-gradient(
+        110deg,
+        #FBE8EB,
+        #FFF0DF
+    );
+    border-color: #EADDD6;
+}
+
+.theme-root[data-theme="light"] .explore-prompt h3 {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .explore-prompt p {
+    color: #706264;
+}
+
+/* ==========================================
+   GLOBAL SKILLSWAP BRANDING
+========================================== */
+
+.theme-root[data-theme="dark"] .brand-symbol {
+    background: linear-gradient(135deg, #8157E8, #477BFF);
+}
+
+.theme-root[data-theme="dark"] .brand-highlight {
+    color: #B9A4FF;
+}
+
+.theme-root[data-theme="light"] .brand-symbol {
+    background: linear-gradient(135deg, #B5062F, #E8A559);
+    color: #FFFFFF;
+}
+
+.theme-root[data-theme="light"] .brand-highlight {
+    color: #B5062F;
+}
+
+/* ==========================================
+   EXPLORE SKILLS — RISHIHOOD LIGHT
+========================================== */
+
+.theme-root[data-theme="light"] .explore-page {
+    background:
+        radial-gradient(ellipse at 15% 10%, rgba(232,165,89,0.13), transparent 40%),
+        #FFF9F4;
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .explore-page .brand {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .explore-nav a {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .explore-nav a:hover {
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .explore-intro h1,
+.theme-root[data-theme="light"] .explore-page .results-heading h2 {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .explore-intro h1 span {
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .explore-intro > p:last-child,
+.theme-root[data-theme="light"] .explore-results,
+.theme-root[data-theme="light"] .student-details,
+.theme-root[data-theme="light"] .student-description {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .explore-search {
+    background: #FFFFFF;
+    color: #292329;
+    border-color: #EADDD6;
+}
+
+.theme-root[data-theme="light"] .explore-search::placeholder {
+    color: #998B89;
+}
+
+.theme-root[data-theme="light"] .category-filters button,
+.theme-root[data-theme="light"] .explore-filters button {
+    background: #FFFFFF;
+    color: #706264;
+    border-color: #EADDD6;
+}
+
+.theme-root[data-theme="light"] .category-filters button:hover,
+.theme-root[data-theme="light"] .category-filters button.selected,
+.theme-root[data-theme="light"] .explore-filters button:hover,
+.theme-root[data-theme="light"] .explore-filters button.active {
+    background: linear-gradient(120deg, #B5062F, #E8A559);
+    color: #FFFFFF;
+    border-color: transparent;
+}
+
+.theme-root[data-theme="light"] .student-card {
+    background: #FFFFFF;
+    border-color: #EADDD6;
+    box-shadow: 0 8px 25px rgba(76,35,35,0.05);
+}
+
+.theme-root[data-theme="light"] .student-card h3 {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .student-card p {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .student-category {
+    background: #FBE8EB;
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .student-skill {
+    background: #FFF0DF;
+    border-color: #F0D9C4;
+    color: #8C5426;
+}
+
+.theme-root[data-theme="light"] .student-card button {
+    background: linear-gradient(120deg, #B5062F, #E8A559);
+    color: #FFFFFF;
+}
+
+.theme-root[data-theme="light"] .student-card button:disabled {
+    background: #E9D9D5;
+    color: #795F5C;
+}
+
+.theme-root[data-theme="light"] .request-success {
+    color: #B5062F !important;
+}
+
+.theme-root[data-theme="light"] .explore-empty,
+.theme-root[data-theme="light"] .no-results {
+    color: #706264;
+    border-color: #EADDD6;
+}
+
+/* ==========================================
+   MY SKILLS — RISHIHOOD LIGHT
+========================================== */
+
+.theme-root[data-theme="light"] .my-skills-page {
+    background:
+        radial-gradient(ellipse at 15% 10%, rgba(232,165,89,0.13), transparent 40%),
+        #FFF9F4;
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .my-skills-page .brand {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .my-skills-page .explore-nav a {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .my-skills-page .explore-nav a:hover {
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .my-skills-intro h1 {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .my-skills-intro h1 span {
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .my-skills-intro > p:last-child {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .my-skills-card,
+.theme-root[data-theme="light"] .skills-summary {
+    background: #FFFFFF;
+    border-color: #EADDD6;
+    box-shadow: 0 8px 25px rgba(76,35,35,0.05);
+}
+
+.theme-root[data-theme="light"] .skills-card-heading h2,
+.theme-root[data-theme="light"] .skills-summary h2 {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .skills-card-heading p {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .skills-icon {
+    background: #FBE8EB;
+}
+
+.theme-root[data-theme="light"] .add-skill-form input {
+    background: #FFFCFA;
+    color: #292329;
+    border-color: #EADDD6;
+}
+
+.theme-root[data-theme="light"] .add-skill-form input::placeholder {
+    color: #998B89;
+}
+
+.theme-root[data-theme="light"] .add-skill-form button {
+    background: linear-gradient(120deg, #B5062F, #E8A559);
+    color: #FFFFFF;
+}
+
+.theme-root[data-theme="light"] .my-skill-item {
+    background: #FFF1E8;
+    border-color: #F0D9C4;
+    color: #503535;
+}
+
+.theme-root[data-theme="light"] .my-skill-item button {
+    background: #FBE0E1;
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .my-skill-item button:hover {
+    background: #B5062F;
+    color: #FFFFFF;
+}
+
+.theme-root[data-theme="light"] .skills-empty {
+    color: #897977;
+    border-color: #EADDD6;
+}
+
+.theme-root[data-theme="light"] .summary-items div {
+    background: #FFF1E8;
+}
+
+.theme-root[data-theme="light"] .summary-items strong {
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .summary-items span {
+    color: #706264;
+}
+
+/* ==========================================
+   LOGIN & REGISTRATION — RISHIHOOD LIGHT
+========================================== */
+
+.theme-root[data-theme="light"] .auth-page {
+    background:
+        radial-gradient(ellipse at 15% 15%, rgba(232,165,89,0.16), transparent 40%),
+        radial-gradient(ellipse at 85% 80%, rgba(181,6,47,0.08), transparent 40%),
+        #FFF9F4;
+}
+
+.theme-root[data-theme="light"] .auth-page::before {
+    display: none;
+}
+
+.theme-root[data-theme="light"] .auth-card {
+    background: rgba(255,255,255,0.94);
+    border-color: #EADDD6;
+    box-shadow: 0 20px 60px rgba(76,35,35,0.09);
+    backdrop-filter: blur(15px);
+}
+
+.theme-root[data-theme="light"] .auth-brand,
+.theme-root[data-theme="light"] .auth-card h1 {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .auth-subtitle {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .auth-form label,
+.theme-root[data-theme="light"] .remember-label {
+    color: #503F40;
+}
+
+.theme-root[data-theme="light"] .auth-form input,
+.theme-root[data-theme="light"] .auth-form select {
+    background: #FFFCFA;
+    color: #292329;
+    border-color: #EADDD6;
+}
+
+.theme-root[data-theme="light"] .auth-form input::placeholder {
+    color: #998B89;
+}
+
+.theme-root[data-theme="light"] .auth-form input:focus,
+.theme-root[data-theme="light"] .auth-form select:focus {
+    border-color: #B5062F;
+    box-shadow: 0 0 0 3px rgba(181,6,47,0.09);
+}
+
+.theme-root[data-theme="light"] .auth-form select option {
+    background: #FFFFFF;
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .auth-submit {
+    background: linear-gradient(110deg, #B5062F, #E8A559);
+    color: #FFFFFF;
+    box-shadow: 0 5px 25px rgba(181,6,47,0.16);
+}
+
+.theme-root[data-theme="light"] .auth-submit:hover {
+    background: linear-gradient(110deg, #921027, #D98B42);
+}
+
+.theme-root[data-theme="light"] .auth-footer {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .auth-footer a,
+.theme-root[data-theme="light"] .back-home,
+.theme-root[data-theme="light"] .login-options a,
+.theme-root[data-theme="light"] .password-toggle {
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .auth-footer a:hover,
+.theme-root[data-theme="light"] .back-home:hover {
+    color: #8C142D;
+}
+
+.theme-root[data-theme="light"] .remember-label input {
+    accent-color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .password-toggle {
+    background: transparent;
+}
+
+/* Improve logo contrast on dark pages */
+
+.theme-root[data-theme="dark"] .my-skills-page .brand,
+.theme-root[data-theme="dark"] .explore-page .brand {
+    color: #F8F7FF;
+}
+
+.theme-root[data-theme="dark"] .my-skills-page .brand-highlight,
+.theme-root[data-theme="dark"] .explore-page .brand-highlight {
+    color: #B9A4FF;
+}
+
+/* ==========================================
+   COLLAPSIBLE DASHBOARD SIDEBAR
+========================================== */
+
+.dashboard-sidebar {
+    position: sticky;
+    transition: width 0.25s ease, padding 0.25s ease;
+}
+
+.sidebar-toggle {
+    align-self: flex-end;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    margin-bottom: 18px;
+    border: 1px solid rgba(190, 170, 255, 0.2);
+    border-radius: 9px;
+    background: rgba(129, 87, 232, 0.15);
+    color: #c4adff;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.sidebar-toggle:hover {
+    background: rgba(129, 87, 232, 0.3);
+}
+
+/* Collapsed sidebar */
+
+.dashboard-sidebar.collapsed {
+    width: 88px;
+    padding-right: 12px;
+    padding-left: 12px;
+}
+
+.dashboard-sidebar.collapsed .dashboard-brand {
+    justify-content: center;
+}
+
+.dashboard-sidebar.collapsed .dashboard-brand > span:not(.brand-symbol) {
+    display: none;
+}
+
+.dashboard-sidebar.collapsed .dashboard-nav a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 13px 8px;
+}
+
+.dashboard-sidebar.collapsed .sidebar-link-label {
+    display: none;
+}
+
+.dashboard-sidebar.collapsed .sidebar-bottom a,
+.dashboard-sidebar.collapsed .dashboard-logout {
+    overflow: hidden;
+    font-size: 0;
+    text-align: center;
+}
+
+.dashboard-sidebar.collapsed .sidebar-bottom a::first-letter,
+.dashboard-sidebar.collapsed .dashboard-logout::first-letter {
+    font-size: 18px;
+}
+
+/* Light theme */
+
+.theme-root[data-theme="light"] .sidebar-toggle {
+    border-color: #EADDD6;
+    background: #FBE8EB;
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .sidebar-toggle:hover {
+    background: #F5D9D9;
+}
+/* ==========================================
+   SHARED PAGE NAVBAR
+========================================== */
+
+.page-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 17px 5%;
+    background: rgba(13, 16, 38, 0.96);
+    border-bottom: 1px solid rgba(190, 170, 255, 0.16);
+    backdrop-filter: blur(15px);
+}
+
+.page-navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #f8f7ff;
+    font-size: 21px;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.page-navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.page-navbar-links a {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 13px;
+    border-radius: 9px;
+    color: #aaa9c7;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+.page-navbar-links a:hover,
+.page-navbar-links a.active {
+    background: rgba(129, 87, 232, 0.17);
+    color: #c4adff;
+}
+
+/* Rishihood Light */
+
+.theme-root[data-theme="light"] .page-navbar {
+    background: rgba(255, 255, 255, 0.96);
+    border-bottom-color: #EADDD6;
+}
+
+.theme-root[data-theme="light"] .page-navbar-brand {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .page-navbar-links a {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .page-navbar-links a:hover,
+.theme-root[data-theme="light"] .page-navbar-links a.active {
+    background: #FBE8EB;
+    color: #B5062F;
+}
+
+/* Responsive layout */
+
+@media (max-width: 850px) {
+    .page-navbar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .page-navbar-links {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 5px;
+    }
+}
+
+@media (max-width: 500px) {
+    .page-navbar {
+        padding: 15px 4%;
+    }
+
+    .page-navbar-links a {
+        padding: 9px 11px;
+        font-size: 12px;
+    }
+}
+/* ==========================================
+   PAGE NAVBAR — MOBILE HAMBURGER MENU
+========================================== */
+
+/* Hide hamburger on desktop */
+
+.page-navbar-toggle {
+    display: none;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(190, 170, 255, 0.2);
+    border-radius: 9px;
+    background: rgba(129, 87, 232, 0.15);
+    color: #c4adff;
+    font-size: 21px;
+    cursor: pointer;
+}
+
+/* Mobile navigation */
+
+@media (max-width: 850px) {
+    .page-navbar {
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .page-navbar-toggle {
+        display: grid;
+        place-items: center;
+        margin-left: auto;
+    }
+
+    .page-navbar-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        overflow: visible;
+        padding: 10px 0 0;
+    }
+
+    .page-navbar-links.open {
+        display: flex;
+    }
+
+    .page-navbar-links a {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+/* Rishihood Light hamburger */
+
+.theme-root[data-theme="light"] .page-navbar-toggle {
+    border-color: #EADDD6;
+    background: #FBE8EB;
+    color: #B5062F;
+}
+
+.theme-root[data-theme="light"] .page-navbar-toggle:hover {
+    background: #F5D9D9;
 }
