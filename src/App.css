@@ -3756,3 +3756,937 @@
 .theme-root[data-theme="light"] .page-navbar-toggle:hover {
     background: #F5D9D9;
 }
+
+.request-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.request-actions button {
+    flex: 1;
+    min-width: 100px;
+}
+
+/* ==========================================
+   SKILLSWAP — SHARED AUTHENTICATED NAVIGATION
+========================================== */
+
+.authenticated-content {
+    min-height: calc(100vh - 70px);
+}
+
+/* Logout button inside the shared navbar */
+.page-navbar-links .navbar-logout {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 13px;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    color: #aaa9c7;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+.page-navbar-links .navbar-logout:hover {
+    background: rgba(129, 87, 232, 0.17);
+    color: #c4adff;
+}
+
+/* Keep the content area below the shared navbar */
+.dashboard-page {
+    min-height: calc(100vh - 70px);
+}
+
+.explore-page,
+.my-skills-page {
+    min-height: calc(100vh - 70px);
+}
+
+/* Mobile logout button */
+@media (max-width: 850px) {
+    .page-navbar-links .navbar-logout {
+        width: 100%;
+        box-sizing: border-box;
+        text-align: left;
+    }
+}
+
+/* Light theme */
+.theme-root[data-theme="light"] .page-navbar-links .navbar-logout {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .page-navbar-links .navbar-logout:hover {
+    background: #FBE8EB;
+    color: #B5062F;
+}
+
+/* ==========================================
+   SKILLSWAP — STUDENT PROFILE
+========================================== */
+
+.profile-page {
+    min-height: calc(100vh - 70px);
+    box-sizing: border-box;
+    padding: 55px 7%;
+    color: #f8f7ff;
+    background:
+        radial-gradient(
+            ellipse at 85% 5%,
+            rgba(94, 64, 180, 0.16),
+            transparent 42%
+        ),
+        #080b1a;
+}
+
+.profile-main {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.profile-intro {
+    margin-bottom: 35px;
+}
+
+.profile-intro h1 {
+    margin: 0;
+    color: #f8f7ff;
+    font-size: clamp(30px, 4vw, 42px);
+}
+
+.profile-intro h1 span {
+    color: #b9a4ff;
+}
+
+.profile-intro > p:last-child {
+    max-width: 600px;
+    color: #aaa9c7;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.profile-loading {
+    padding: 100px 20px;
+    color: #c4adff;
+    text-align: center;
+    font-size: 17px;
+}
+
+.profile-card {
+    padding: 32px;
+    border: 1px solid rgba(190, 170, 255, 0.18);
+    border-radius: 22px;
+    background: rgba(25, 29, 59, 0.76);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.18);
+}
+
+.profile-card-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.profile-avatar {
+    display: grid;
+    place-items: center;
+    width: 76px;
+    height: 76px;
+    flex-shrink: 0;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #8157e8, #477bff);
+    color: white;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.profile-heading-text {
+    flex: 1;
+    min-width: 150px;
+}
+
+.profile-heading-text h2 {
+    margin: 0 0 7px;
+    color: #f8f7ff;
+    font-size: 23px;
+}
+
+.profile-heading-text p {
+    margin: 0;
+    color: #aaa9c7;
+    font-size: 13px;
+}
+
+.profile-edit-button,
+.profile-save-button {
+    padding: 12px 17px;
+    border: 0;
+    border-radius: 10px;
+    background: linear-gradient(110deg, #7955db, #477bff);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.profile-edit-button:hover,
+.profile-save-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(111, 85, 225, 0.3);
+}
+
+.profile-divider {
+    height: 1px;
+    margin: 28px 0;
+    background: rgba(190, 170, 255, 0.15);
+}
+
+.profile-form-heading {
+    margin-bottom: 22px;
+}
+
+.profile-form-heading h3 {
+    margin: 0 0 6px;
+    color: #f8f7ff;
+    font-size: 18px;
+}
+
+.profile-form-heading p {
+    margin: 0;
+    color: #aaa9c7;
+    font-size: 12px;
+}
+
+.profile-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.profile-field {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    min-width: 0;
+}
+
+.profile-field label {
+    color: #d8d1f0;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.profile-field input,
+.profile-field select,
+.profile-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 14px;
+    border: 1px solid rgba(190, 170, 255, 0.2);
+    border-radius: 10px;
+    outline: none;
+    background: rgba(8, 11, 26, 0.65);
+    color: #f8f7ff;
+    font: inherit;
+    font-size: 13px;
+    transition: border-color 0.2s ease;
+}
+
+.profile-field input:focus,
+.profile-field select:focus,
+.profile-field textarea:focus {
+    border-color: #9b7cff;
+}
+
+.profile-field input:disabled,
+.profile-field select:disabled,
+.profile-field textarea:disabled,
+.profile-field input:read-only {
+    opacity: 0.8;
+    cursor: default;
+}
+
+.profile-field input:disabled,
+.profile-field input:read-only {
+    background: rgba(8, 11, 26, 0.4);
+}
+
+.profile-field textarea {
+    resize: vertical;
+    line-height: 1.7;
+}
+
+.profile-field small {
+    color: #9996b5;
+    font-size: 11px;
+}
+
+.profile-bio-field {
+    margin-top: 24px;
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.profile-cancel-button {
+    padding: 12px 18px;
+    border: 1px solid rgba(190, 170, 255, 0.25);
+    border-radius: 10px;
+    background: transparent;
+    color: #d8d1f0;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.profile-cancel-button:hover {
+    background: rgba(190, 170, 255, 0.1);
+}
+
+.profile-save-button:disabled,
+.profile-cancel-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.profile-extra-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 25px;
+}
+
+.profile-extra-details > div {
+    padding: 18px;
+    border: 1px solid rgba(190, 170, 255, 0.13);
+    border-radius: 13px;
+    background: rgba(8, 11, 26, 0.35);
+}
+
+.profile-extra-details span {
+    font-size: 21px;
+}
+
+.profile-extra-details p {
+    margin: 10px 0 6px;
+    color: #aaa9c7;
+    font-size: 12px;
+}
+
+.profile-extra-details strong {
+    color: #e7e0ff;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.profile-message {
+    margin-bottom: 18px;
+    padding: 13px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.profile-error {
+    border: 1px solid rgba(255, 100, 120, 0.3);
+    background: rgba(180, 40, 65, 0.12);
+    color: #ff9aa8;
+}
+
+.profile-success {
+    border: 1px solid rgba(70, 210, 150, 0.25);
+    background: rgba(40, 170, 110, 0.12);
+    color: #82e6b7;
+}
+
+/* Profile responsive layout */
+@media (max-width: 650px) {
+    .profile-page {
+        padding: 35px 5%;
+    }
+
+    .profile-card {
+        padding: 22px 17px;
+    }
+
+    .profile-form-grid,
+    .profile-extra-details {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-edit-button {
+        width: 100%;
+    }
+
+    .profile-card-header {
+        gap: 14px;
+    }
+}
+
+/* Profile light theme */
+.theme-root[data-theme="light"] .profile-page {
+    background:
+        radial-gradient(
+            ellipse at 85% 5%,
+            rgba(232, 165, 89, 0.13),
+            transparent 42%
+        ),
+        #fff9f4;
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .profile-intro h1,
+.theme-root[data-theme="light"] .profile-heading-text h2,
+.theme-root[data-theme="light"] .profile-form-heading h3 {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .profile-intro h1 span {
+    color: #b5062f;
+}
+
+.theme-root[data-theme="light"] .profile-card {
+    border-color: #eadde0;
+    background: rgba(255, 255, 255, 0.88);
+}
+
+.theme-root[data-theme="light"] .profile-heading-text p,
+.theme-root[data-theme="light"] .profile-intro > p:last-child,
+.theme-root[data-theme="light"] .profile-form-heading p,
+.theme-root[data-theme="light"] .profile-extra-details p {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .profile-field label {
+    color: #483b40;
+}
+
+.theme-root[data-theme="light"] .profile-field input,
+.theme-root[data-theme="light"] .profile-field select,
+.theme-root[data-theme="light"] .profile-field textarea {
+    border-color: #eadde0;
+    background: #fff;
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .profile-extra-details > div {
+    border-color: #eadde0;
+    background: #fff9f4;
+}
+
+.theme-root[data-theme="light"] .profile-extra-details strong {
+    color: #483b40;
+}
+
+.theme-root[data-theme="light"] .profile-cancel-button {
+    border-color: #eadde0;
+    color: #483b40;
+}
+
+.theme-root[data-theme="light"] .profile-field small {
+    color: #817477;
+}
+/* ==========================================
+   SKILLSWAP — VERTICAL APP SIDEBAR
+========================================== */
+
+.authenticated-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #080b1a;
+}
+
+.authenticated-main {
+    flex: 1;
+    min-width: 0;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.app-sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    display: flex;
+    flex: 0 0 255px;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 255px;
+    height: 100vh;
+    padding: 30px 20px;
+    border-right: 1px solid rgba(190, 170, 255, 0.15);
+    background: rgba(15, 19, 42, 0.98);
+}
+
+.app-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 55px;
+    color: #f8f7ff;
+    font-size: 22px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.app-sidebar-label {
+    margin: 0 0 15px 12px;
+    color: #777795;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+}
+
+.app-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.app-sidebar-nav a,
+.app-sidebar-footer button {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 13px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: #aaa9c7;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.app-sidebar-nav a span,
+.app-sidebar-footer button span {
+    font-size: 18px;
+}
+
+.app-sidebar-nav a:hover,
+.app-sidebar-nav a.active {
+    background: rgba(129, 87, 232, 0.18);
+    color: #c4adff;
+}
+
+.app-sidebar-footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(190, 170, 255, 0.13);
+}
+
+.app-sidebar-footer button:hover {
+    background: rgba(255, 90, 120, 0.12);
+    color: #ff9aa8;
+}
+
+/* Mobile controls hidden on desktop */
+.app-sidebar-mobile-toggle,
+.app-sidebar-backdrop {
+    display: none;
+}
+
+/* Light theme */
+.theme-root[data-theme="light"] .app-sidebar {
+    border-right-color: #eadde0;
+    background: #ffffff;
+}
+
+.theme-root[data-theme="light"] .app-sidebar-brand {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .app-sidebar-label {
+    color: #938589;
+}
+
+.theme-root[data-theme="light"] .app-sidebar-nav a,
+.theme-root[data-theme="light"] .app-sidebar-footer button {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .app-sidebar-nav a:hover,
+.theme-root[data-theme="light"] .app-sidebar-nav a.active {
+    background: #fbe8eb;
+    color: #b5062f;
+}
+
+.theme-root[data-theme="light"] .app-sidebar-footer {
+    border-top-color: #eadde0;
+}
+
+/* Mobile sidebar */
+@media (max-width: 850px) {
+    .app-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 260px;
+        height: 100vh;
+        transform: translateX(-105%);
+        transition: transform 0.25s ease;
+    }
+
+    .app-sidebar.open {
+        transform: translateX(0);
+    }
+
+    .app-sidebar-mobile-toggle {
+        position: fixed;
+        top: 13px;
+        left: 15px;
+        z-index: 220;
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border: 1px solid rgba(190, 170, 255, 0.2);
+        border-radius: 10px;
+        background: #191d3b;
+        color: #c4adff;
+        font-size: 21px;
+        cursor: pointer;
+    }
+
+    .app-sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 190;
+        display: block;
+        border: 0;
+        background: rgba(0, 0, 0, 0.55);
+    }
+
+    .authenticated-main {
+        padding-top: 60px;
+        box-sizing: border-box;
+    }
+}
+
+/* =====================================
+   COLLAPSIBLE SKILLSWAP SIDEBAR
+===================================== */
+
+.authenticated-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.authenticated-main {
+    flex: 1;
+    min-width: 0;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+
+.app-sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    display: flex;
+    flex: 0 0 255px;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 255px;
+    height: 100vh;
+    padding: 30px 20px;
+    overflow: hidden;
+    border-right: 1px solid rgba(190, 170, 255, 0.15);
+    background: #0f132a;
+    transition: width 0.25s ease, flex-basis 0.25s ease, padding 0.25s ease;
+}
+
+/* Collapsed sidebar */
+
+.app-sidebar.collapsed {
+    flex: 0 0 88px;
+    width: 88px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+/* Brand row */
+
+.app-sidebar-brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 40px;
+    margin-bottom: 55px;
+}
+
+.app-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+    color: #f8f7ff;
+    font-size: 22px;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.brand-symbol {
+    display: grid;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    border-radius: 11px;
+    background: #6b5af5;
+    color: white;
+    font-size: 21px;
+}
+
+.brand-highlight {
+    color: #b9a5ff;
+}
+
+.app-sidebar-collapse-toggle {
+    display: grid;
+    flex: 0 0 28px;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    border: 1px solid rgba(190, 170, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(129, 87, 232, 0.12);
+    color: #c4adff;
+    font-size: 25px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.app-sidebar-collapse-toggle:hover {
+    background: rgba(129, 87, 232, 0.3);
+}
+
+/* Sidebar labels and links */
+
+.app-sidebar-label {
+    margin: 0 0 15px 12px;
+    color: #777795;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.6px;
+    white-space: nowrap;
+}
+
+.app-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.app-sidebar-nav a,
+.app-sidebar-footer button {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    width: 100%;
+    min-height: 48px;
+    box-sizing: border-box;
+    padding: 13px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: #aaa9c7;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.app-sidebar-nav a > span:first-child,
+.app-sidebar-footer button > span:first-child {
+    flex: 0 0 20px;
+    font-size: 18px;
+    text-align: center;
+}
+
+.app-sidebar-nav a:hover,
+.app-sidebar-nav a.active {
+    background: rgba(129, 87, 232, 0.18);
+    color: #c4adff;
+}
+
+.app-sidebar-footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(190, 170, 255, 0.13);
+}
+
+.app-sidebar-footer button:hover {
+    background: rgba(255, 90, 120, 0.12);
+    color: #ff9aa8;
+}
+
+/* Collapsed appearance */
+
+.app-sidebar.collapsed .app-sidebar-brand-row {
+    justify-content: center;
+    gap: 4px;
+}
+
+.app-sidebar.collapsed .app-sidebar-brand {
+    gap: 0;
+}
+
+.app-sidebar.collapsed .app-sidebar-brand-name,
+.app-sidebar.collapsed .app-sidebar-label,
+.app-sidebar.collapsed .app-sidebar-link-label {
+    display: none;
+}
+
+.app-sidebar.collapsed .app-sidebar-nav a,
+.app-sidebar.collapsed .app-sidebar-footer button {
+    justify-content: center;
+    padding: 13px 5px;
+}
+
+.app-sidebar.collapsed .app-sidebar-nav a > span:first-child,
+.app-sidebar.collapsed .app-sidebar-footer button > span:first-child {
+    flex-basis: auto;
+}
+
+/* Light theme */
+
+.theme-root[data-theme="light"] .app-sidebar {
+    border-right-color: #eadde0;
+    background: #fff;
+}
+
+.theme-root[data-theme="light"] .app-sidebar-brand {
+    color: #292329;
+}
+
+.theme-root[data-theme="light"] .app-sidebar-label {
+    color: #938589;
+}
+
+.theme-root[data-theme="light"] .app-sidebar-nav a,
+.theme-root[data-theme="light"] .app-sidebar-footer button {
+    color: #706264;
+}
+
+.theme-root[data-theme="light"] .app-sidebar-nav a:hover,
+.theme-root[data-theme="light"] .app-sidebar-nav a.active {
+    background: #fbe8eb;
+    color: #b5062f;
+}
+
+.theme-root[data-theme="light"] .app-sidebar-footer {
+    border-top-color: #eadde0;
+}
+
+/* Mobile navigation */
+
+.app-sidebar-mobile-toggle,
+.app-sidebar-backdrop {
+    display: none;
+}
+
+@media (max-width: 850px) {
+    .app-sidebar,
+    .app-sidebar.collapsed {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 200;
+        flex: 0 0 260px;
+        width: 260px;
+        height: 100vh;
+        padding: 30px 20px;
+        transform: translateX(-105%);
+        transition: transform 0.25s ease;
+    }
+
+    .app-sidebar.open,
+    .app-sidebar.collapsed.open {
+        transform: translateX(0);
+    }
+
+    /* Keep all labels visible on mobile, even if previously collapsed */
+
+    .app-sidebar.collapsed .app-sidebar-brand-row {
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .app-sidebar.collapsed .app-sidebar-brand {
+        gap: 11px;
+    }
+
+    .app-sidebar.collapsed .app-sidebar-brand-name,
+    .app-sidebar.collapsed .app-sidebar-label,
+    .app-sidebar.collapsed .app-sidebar-link-label {
+        display: inline;
+    }
+
+    .app-sidebar.collapsed .app-sidebar-nav a,
+    .app-sidebar.collapsed .app-sidebar-footer button {
+        justify-content: flex-start;
+        padding: 13px;
+    }
+
+    .app-sidebar-collapse-toggle {
+        display: none;
+    }
+
+    .app-sidebar-mobile-toggle {
+        position: fixed;
+        top: 13px;
+        left: 15px;
+        z-index: 220;
+        display: grid;
+        width: 42px;
+        height: 42px;
+        place-items: center;
+        border: 1px solid rgba(190, 170, 255, 0.2);
+        border-radius: 10px;
+        background: #191d3b;
+        color: #c4adff;
+        font-size: 21px;
+        cursor: pointer;
+    }
+
+    .app-sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 190;
+        display: block;
+        border: 0;
+        background: rgba(0, 0, 0, 0.55);
+    }
+
+    .authenticated-main {
+        padding-top: 60px;
+        box-sizing: border-box;
+    }
+}

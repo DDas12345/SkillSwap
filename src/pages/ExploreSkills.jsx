@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import '../App.css'
 
 const categoryIcons = {
@@ -7,16 +6,18 @@ const categoryIcons = {
     Design: '🎨',
     Communication: '🗣️',
     Career: '📈',
-    General: '✨'
+    General: '✨',
 }
 
 function ExploreSkills() {
-    const isLoggedIn = Boolean(
-        localStorage.getItem('accessToken')
-    )
+
     const [search, setSearch] = useState('')
     const [selectedCategory, setSelectedCategory] = useState('All')
+
+    // Persisted outgoing requests
     const [sentRequests, setSentRequests] = useState([])
+    const [requestingStudentId, setRequestingStudentId] = useState(null)
+    const [requestError, setRequestError] = useState('')
 
     // Students fetched from the backend
     const [students, setStudents] = useState([])
@@ -25,7 +26,10 @@ function ExploreSkills() {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState('')
 
+    // Fetch students and existing outgoing requests
     useEffect(() => {
+        const controller = new AbortController()
+
         const fetchStudents = async () => {
             try {
                 setError('')
@@ -36,12 +40,14 @@ function ExploreSkills() {
                     throw new Error('Please log in to explore students.')
                 }
 
+                // Fetch students offering teaching skills
                 const response = await fetch(
                     'http://localhost:5001/api/skills/explore',
                     {
                         headers: {
-                            Authorization: `Bearer ${token}`
-                        }
+                            Authorization: `Bearer ${token}`,
+                        },
+                        signal: controller.signal,
                     }
                 )
 
@@ -53,7 +59,11 @@ function ExploreSkills() {
                     )
                 }
 
-                // Convert API records into the format used by our cards
+                if (!Array.isArray(data.students)) {
+                    throw new Error('Invalid student data received.')
+                }
+
+                // Format student data for the Explore cards
                 const formattedStudents = data.students.map((student) => {
                     const yearNumber = Number(student.yearOfStudy)
 
@@ -64,7 +74,7 @@ function ExploreSkills() {
                             1: 'st',
                             2: 'nd',
                             3: 'rd',
-                            4: 'th'
+                            4: 'th',
                         }[yearNumber]
 
                         yearLabel = `${yearNumber}${suffix} Year`
@@ -73,6 +83,10 @@ function ExploreSkills() {
                     return {
                         id: student.id,
                         userId: student.userId,
+
+                        // Important: actual Skill table ID
+                        skillId: student.skillId,
+
                         name: student.fullName,
                         initials: student.fullName
                             .split(' ')
@@ -85,43 +99,139 @@ function ExploreSkills() {
                         skill: student.skill,
                         category: student.category,
                         icon: categoryIcons[student.category] || '✨',
-                        description: student.bio ||
-                            'This student is sharing this skill with the campus community.'
+                        description:
+                            student.bio ||
+                            'This student is sharing this skill with the campus community.',
                     }
                 })
 
                 setStudents(formattedStudents)
 
+                // Fetch existing outgoing requests
+                try {
+                    const requestsResponse = await fetch(
+                        'http://localhost:5001/api/requests',
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                            signal: controller.signal,
+                        }
+                    )
+
+                    if (requestsResponse.ok) {
+                        const requestsData = await requestsResponse.json()
+
+                        const pendingKeys = (
+                            requestsData.outgoingRequests || []
+                        )
+                            .filter(
+                                (request) => request.status === 'PENDING'
+                            )
+                            .map(
+                                (request) =>
+                                    `${request.receiverId}:${request.requestedSkillId}`
+                            )
+
+                        setSentRequests(pendingKeys)
+                    } else {
+                        console.error(
+                            'Unable to fetch existing requests:',
+                            requestsResponse.status
+                        )
+                    }
+                } catch (requestFetchError) {
+                    if (requestFetchError.name !== 'AbortError') {
+                        console.error(
+                            'Unable to load existing requests:',
+                            requestFetchError
+                        )
+                    }
+                }
+
             } catch (err) {
-                setError(err.message)
+                if (err.name !== 'AbortError') {
+                    setError(err.message)
+                }
             } finally {
-                setIsLoading(false)
+                if (!controller.signal.aborted) {
+                    setIsLoading(false)
+                }
             }
         }
 
         fetchStudents()
+
+        return () => controller.abort()
     }, [])
 
-    // Handle connection requests
-    const handleConnect = (student) => {
-        if (sentRequests.includes(student.id)) {
+    // Send a real exchange request to PostgreSQL
+    const handleConnect = async (student) => {
+        const requestKey = `${student.userId}:${student.skillId}`
+
+        if (
+            sentRequests.includes(requestKey) ||
+            requestingStudentId === requestKey
+        ) {
             return
         }
 
-        setSentRequests((previousRequests) => [
-            ...previousRequests,
-            student.id,
-        ])
+        try {
+            setRequestError('')
+
+            const token = localStorage.getItem('accessToken')
+
+            if (!token) {
+                throw new Error('Please log in to send a request.')
+            }
+
+            setRequestingStudentId(requestKey)
+
+            const response = await fetch(
+                'http://localhost:5001/api/requests',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        receiverId: student.userId,
+                        requestedSkillId: student.skillId,
+                        message: `Hi ${student.name}, I would like to learn ${student.skill}.`,
+                    }),
+                }
+            )
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || 'Unable to send exchange request.'
+                )
+            }
+
+            // Update the button only after the server confirms success
+            setSentRequests((previousRequests) => [
+                ...previousRequests,
+                requestKey,
+            ])
+
+        } catch (err) {
+            setRequestError(err.message)
+        } finally {
+            setRequestingStudentId(null)
+        }
     }
 
-    // Generate categories from the students fetched from the database
+    // Generate categories from database results
     const categories = [
         'All',
         ...new Set(
             students
                 .map((student) => student.category)
                 .filter(Boolean)
-        )
+        ),
     ]
 
     // Search and category filtering
@@ -139,30 +249,6 @@ function ExploreSkills() {
 
     return (
         <div className="explore-page">
-
-            {/* Header */}
-            <header className="explore-header">
-                <Link to="/" className="brand">
-                    <span className="brand-symbol">S</span>
-                    <span>
-                        skill<span className="brand-highlight">swap</span>
-                    </span>
-                </Link>
-
-                <nav className="explore-nav">
-                    {isLoggedIn ? (
-                        <>
-                            <Link to="/dashboard">Dashboard</Link>
-                            <Link to="/my-skills">My Skills</Link>
-                        </>
-                    ) : (
-                        <>
-                            <Link to="/login">Log In</Link>
-                            <Link to="/register">Sign Up</Link>
-                        </>
-                    )}
-                </nav>
-            </header>
 
             <main className="explore-main">
 
@@ -214,6 +300,13 @@ function ExploreSkills() {
 
                 </section>
 
+                {/* Request error */}
+                {requestError && (
+                    <div className="no-results" role="alert">
+                        <p>{requestError}</p>
+                    </div>
+                )}
+
                 {/* Student Results */}
                 <section className="student-results">
 
@@ -238,71 +331,92 @@ function ExploreSkills() {
 
                     <div className="student-grid">
 
-                        {filteredStudents.map((student) => (
+                        {filteredStudents.map((student) => {
+                            const requestKey =
+                                `${student.userId}:${student.skillId}`
 
-                            <article className="student-card" key={student.id}>
+                            const requestAlreadySent =
+                                sentRequests.includes(requestKey)
 
-                                <div className="student-card-top">
-                                    <div className="student-initials">
-                                        {student.initials}
+                            const isSending =
+                                requestingStudentId === requestKey
+
+                            return (
+                                <article
+                                    className="student-card"
+                                    key={student.id}
+                                >
+
+                                    <div className="student-card-top">
+                                        <div className="student-initials">
+                                            {student.initials}
+                                        </div>
+
+                                        <span className="student-category">
+                                            {student.icon} {student.category}
+                                        </span>
                                     </div>
 
-                                    <span className="student-category">
-                                        {student.icon} {student.category}
-                                    </span>
-                                </div>
+                                    <h3>{student.name}</h3>
 
-                                <h3>{student.name}</h3>
-
-                                <p className="student-details">
-                                    {student.department} · {student.year}
-                                </p>
-
-                                <div className="student-skill">
-                                    <span>CAN TEACH</span>
-                                    <strong>{student.skill}</strong>
-                                </div>
-
-                                <p className="student-description">
-                                    {student.description}
-                                </p>
-
-                                {/* Connection Request Button */}
-                                <button
-                                    className={`connect-button ${sentRequests.includes(student.id)
-                                        ? 'request-sent'
-                                        : ''
-                                        }`}
-                                    type="button"
-                                    onClick={() => handleConnect(student)}
-                                    disabled={sentRequests.includes(student.id)}
-                                >
-                                    {sentRequests.includes(student.id)
-                                        ? 'Request Sent ✓'
-                                        : 'Connect ↗'}
-                                </button>
-
-                                {/* Success Message */}
-                                {sentRequests.includes(student.id) && (
-                                    <p className="request-success">
-                                        ✨ Connection request sent successfully!
+                                    <p className="student-details">
+                                        {student.department} · {student.year}
                                     </p>
-                                )}
 
-                            </article>
+                                    <div className="student-skill">
+                                        <span>CAN TEACH</span>
+                                        <strong>{student.skill}</strong>
+                                    </div>
 
-                        ))}
+                                    <p className="student-description">
+                                        {student.description}
+                                    </p>
+
+                                    {/* Persistent connection request */}
+                                    <button
+                                        className={`connect-button ${
+                                            requestAlreadySent
+                                                ? 'request-sent'
+                                                : ''
+                                        }`}
+                                        type="button"
+                                        disabled={
+                                            requestAlreadySent || isSending
+                                        }
+                                        onClick={() => handleConnect(student)}
+                                    >
+                                        {isSending
+                                            ? 'Sending...'
+                                            : requestAlreadySent
+                                                ? 'Request Sent ✓'
+                                                : 'Connect ↗'}
+                                    </button>
+
+                                    {requestAlreadySent && (
+                                        <p className="request-success">
+                                            ✨ Connection request sent successfully!
+                                        </p>
+                                    )}
+
+                                </article>
+                            )
+                        })}
 
                     </div>
 
                     {/* No Results Message */}
-                    {!isLoading && !error && filteredStudents.length === 0 && (
-                        <div className="no-results">
-                            <span>🌌</span>
-                            <h3>No students sharing skills yet</h3>
-                            <p>Be the first to share your knowledge with the campus community!</p>
-                        </div>
-                    )}
+                    {!isLoading &&
+                        !error &&
+                        filteredStudents.length === 0 && (
+                            <div className="no-results">
+                                <span>🌌</span>
+                                <h3>No students sharing skills yet</h3>
+                                <p>
+                                    Be the first to share your knowledge
+                                    with the campus community!
+                                </p>
+                            </div>
+                        )}
 
                 </section>
 

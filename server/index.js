@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import healthRoutes from "./routes/health.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import skillsRoutes from "./routes/skills.routes.js";
+import requestsRoutes from "./routes/requests.routes.js";
+import profileRoutes from "./routes/profile.routes.js";
 
 dotenv.config();
 
@@ -14,6 +16,8 @@ app.use(express.json());
 app.use("/api", healthRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/skills", skillsRoutes);
+app.use("/api/requests", requestsRoutes);
+app.use("/api/profile", profileRoutes);
 
 app.get("/", (req, res) => {
     res.send("Welcome to SkillSwap Campus API!");

@@ -1,6 +1,5 @@
 
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import '../App.css'
 
 function MySkills() {
@@ -165,20 +164,6 @@ function MySkills() {
 
     return (
         <div className="my-skills-page">
-
-            <header className="explore-header">
-                <Link to="/" className="brand">
-                    <span className="brand-symbol">S</span>
-                    <span>
-                        skill<span className="brand-highlight">swap</span>
-                    </span>
-                </Link>
-
-                <nav className="explore-nav">
-                    <Link to="/dashboard">Dashboard</Link>
-                    <Link to="/explore">Explore Skills</Link>
-                </nav>
-            </header>
 
             <main className="my-skills-main">
 

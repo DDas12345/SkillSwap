@@ -70,22 +70,7 @@ function Home() {
                     <a href="#about">About us</a>
                 </nav>
 
-                {isLoggedIn ? (
-                    <div className="hero-actions">
-                        <Link
-                            to="/dashboard"
-                            className="button button-small button-dark"
-                        >
-                            Dashboard ↗
-                        </Link>
-                        <Link
-                            to="/my-skills"
-                            className="button button-small button-outline"
-                        >
-                            My Skills
-                        </Link>
-                    </div>
-                ) : (
+                {!isLoggedIn && (
                     <div className="hero-actions">
                         <Link
                             to="/login"
@@ -93,6 +78,7 @@ function Home() {
                         >
                             Log In
                         </Link>
+
                         <Link
                             to="/register"
                             className="button button-small button-dark"
